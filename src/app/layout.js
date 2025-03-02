@@ -28,6 +28,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+      </head>
+      <body className={`${inter.variable} ${montserrat.variable} antialiased text-gray-800 min-h-screen flex flex-col`}>
+        {children}
         <Script
           src="https://cdn.tailwindcss.com"
           strategy="beforeInteractive"
@@ -36,9 +39,6 @@ export default function RootLayout({ children }) {
           src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"
           strategy="afterInteractive"
         />
-      </head>
-      <body className={`${inter.variable} ${montserrat.variable} antialiased text-gray-800 min-h-screen flex flex-col`}>
-        {children}
       </body>
     </html>
   );

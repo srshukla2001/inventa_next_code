@@ -35,72 +35,69 @@ export default function Home() {
             }, 500);
         });
     });
-    document.addEventListener('DOMContentLoaded', function() {
-      const track = document.querySelector('.slider-track');
-      const slides = document.querySelectorAll('.slide');
-      const dots = document.querySelectorAll('.slider-dot');
-      const prevButton = document.getElementById('prevSlide');
-      const nextButton = document.getElementById('nextSlide');
-      let currentIndex = 0;
-      let autoplayInterval;
+    const track = document.querySelector('.slider-track');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const prevButton = document.getElementById('prevSlide');
+    const nextButton = document.getElementById('nextSlide');
+    let currentIndex = 0;
+    let autoplayInterval;
 
-      function updateSlider() {
-          track.style.transform = `translateX(-${currentIndex * 100}%)`;
-          // Update dots
-          dots.forEach((dot, index) => {
-              dot.classList.toggle('bg-white', index === currentIndex);
-              dot.classList.toggle('bg-white/50', index !== currentIndex);
-          });
-      }
+    function updateSlider() {
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        // Update dots
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('bg-white', index === currentIndex);
+            dot.classList.toggle('bg-white/50', index !== currentIndex);
+        });
+    }
 
-      function nextSlide() {
-          currentIndex = (currentIndex + 1) % slides.length;
-          updateSlider();
-      }
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlider();
+    }
 
-      function prevSlide() {
-          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-          updateSlider();
-      }
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateSlider();
+    }
 
-      // Event listeners
-      prevButton.addEventListener('click', () => {
-          prevSlide();
-          resetAutoplay();
-      });
+    // Event listeners
+    prevButton.addEventListener('click', () => {
+        prevSlide();
+        resetAutoplay();
+    });
 
-      nextButton.addEventListener('click', () => {
-          nextSlide();
-          resetAutoplay();
-      });
+    nextButton.addEventListener('click', () => {
+        nextSlide();
+        resetAutoplay();
+    });
 
-      dots.forEach((dot, index) => {
-          dot.addEventListener('click', () => {
-              currentIndex = index;
-              updateSlider();
-              resetAutoplay();
-          });
-      });
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentIndex = index;
+            updateSlider();
+            resetAutoplay();
+        });
+    });
 
-      // Autoplay
-      function startAutoplay() {
-          autoplayInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
-      }
+    // Autoplay
+    function startAutoplay() {
+        autoplayInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    }
 
-      function resetAutoplay() {
-          clearInterval(autoplayInterval);
-          startAutoplay();
-      }
+    function resetAutoplay() {
+        clearInterval(autoplayInterval);
+        startAutoplay();
+    }
 
-      // Initialize slider
-      updateSlider();
-      startAutoplay();
+    // Initialize slider
+    updateSlider();
+    startAutoplay();
 
-      // Optional: Pause autoplay on hover
-      track.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
-      track.addEventListener('mouseleave', startAutoplay);
-  });
-  document.addEventListener('DOMContentLoaded', () => {
+    // Optional: Pause autoplay on hover
+    track.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
+    track.addEventListener('mouseleave', startAutoplay);
     const imageObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -165,53 +162,19 @@ export default function Home() {
       childList: true,
       subtree: true
     });
-  });
 
-  // Performance monitoring
-  if ('performance' in window && 'PerformanceObserver' in window) {
-    // Create performance observer
-    const observer = new PerformanceObserver((list) => {
-      const entries = list.getEntries();
-      entries.forEach((entry) => {
-        if (entry.entryType === 'largest-contentful-paint') {
-          // console.log(`LCP: ${entry.startTime}ms`);
-        }
-        if (entry.entryType === 'first-input') {
-          // console.log(`FID: ${entry.processingStart - entry.startTime}ms`);
-        }
-        if (entry.entryType === 'layout-shift') {
-          // console.log(`CLS: ${entry.value}`);
-        }
-      });
+    // Handle offline/online status
+    window.addEventListener('online', () => {
+      document.body.classList.remove('offline');
+      console.log('Connection restored');
     });
 
-    // Observe performance metrics
-    observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
-
-    // Log basic performance metrics
-    window.addEventListener('load', () => {
-      const timing = performance.getEntriesByType('navigation')[0];
-      console.log({
-        'DNS Lookup': timing.domainLookupEnd - timing.domainLookupStart,
-        'TCP Connection': timing.connectEnd - timing.connectStart,
-        'DOM Content Loaded': timing.domContentLoadedEventEnd - timing.navigationStart,
-        'Page Load': timing.loadEventEnd - timing.navigationStart
-      });
+    window.addEventListener('offline', () => {
+      document.body.classList.add('offline');
+      console.log('Connection lost');
     });
-  }
+  }, []);
 
-  // Handle offline/online status
-  window.addEventListener('online', () => {
-    document.body.classList.remove('offline');
-    console.log('Connection restored');
-  });
-  
-  window.addEventListener('offline', () => {
-    document.body.classList.add('offline');
-    console.log('Connection lost');
-  });
-  })
- 
   return (
     <>
     {/* Skip to main content link for accessibility */}
